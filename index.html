@@ -38,9 +38,30 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .settings-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.settings-row:last-child{border:0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#252824;color:white;padding:11px 16px;border-radius:30px;font-size:13px;display:none;z-index:20}
 @media(min-width:620px){.app{padding-top:32px}.modal-back{align-items:center}.modal{border-radius:24px}}
+
+.login-screen{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
+.login-card{width:min(100%,390px);background:#fff;border:1px solid var(--line);border-radius:24px;padding:28px;box-shadow:var(--shadow)}
+.login-card h1{margin-bottom:8px}.login-card p{font-size:13px;color:var(--muted);line-height:1.7}
+.login-card input{width:100%;border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;color:var(--ink)}
+.login-error{color:var(--red);font-size:13px;min-height:20px;margin-top:8px}
+#appShell{display:none}
 </style>
 </head>
 <body>
+<div class="login-screen" id="loginScreen">
+ <div class="login-card">
+  <div class="brand">簡記<small>PERSONAL FINANCE · CLOUD SYNC</small></div>
+  <h1 style="margin-top:28px">歡迎回來</h1>
+  <p>輸入你的共用密碼，即可在手機與電腦同步記帳資料。</p>
+  <form id="loginForm">
+   <label class="sub" for="loginPassword">共用密碼</label>
+   <input id="loginPassword" type="password" autocomplete="current-password" placeholder="請輸入密碼" required>
+   <button class="primary" id="loginButton" type="submit">登入簡記</button>
+  </form>
+  <div class="login-error" id="loginError"></div>
+ </div>
+</div>
+<div id="appShell">
 <div class="app">
 <header><div class="brand">簡記<small>PERSONAL FINANCE</small></div><div class="header-actions"><button class="icon-btn" id="backupTop" aria-label="備份">↥</button><button class="icon-btn" id="settingsTop" aria-label="設定">⚙</button></div></header>
 
@@ -77,16 +98,17 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 </section>
 
 <section id="settingsPage" class="page">
- <div class="topline"><div><h1>設定與資料</h1><div class="sub">資料只儲存在這台裝置</div></div></div>
+ <div class="topline"><div><h1>設定與資料</h1><div class="sub">已啟用 Supabase 雲端同步</div></div></div>
  <div class="card">
   <div class="settings-row"><div><b>分類管理</b><div class="sub">新增、修改或刪除分類</div></div><button class="secondary" id="manageCats">管理</button></div>
   <div class="settings-row"><div><b>年度與月度預算</b><div class="sub">逐分類設定兩種預算</div></div><button class="secondary" id="manageBudgets2">管理</button></div>
   <div class="settings-row"><div><b>匯出 Excel</b><div class="sub">下載支出明細與分類預算（.xlsx）</div></div><button class="secondary" id="excelBtn">匯出</button></div>
   <div class="settings-row"><div><b>資料備份</b><div class="sub">下載 JSON 檔保存資料</div></div><button class="secondary" id="exportBtn">備份</button></div>
   <div class="settings-row"><div><b>匯入備份</b><div class="sub">從 JSON 檔還原</div></div><button class="secondary" id="importBtn">匯入</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
+  <div class="settings-row"><div><b>登出簡記</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
   <div class="settings-row"><div><b>清除所有資料</b><div class="sub">此操作無法復原，請先備份</div></div><button class="secondary danger" id="clearBtn">清除</button></div>
  </div>
- <p class="sub" style="line-height:1.7;margin:16px 4px">版本 2.0 · 免費、免登入、本機儲存。建議定期匯出備份；若清除 Safari 網站資料或更換裝置，未備份資料可能遺失。</p>
+ <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.0 · Supabase 雲端同步。建議定期匯出備份。</p>
 </section>
 </div>
 
@@ -97,9 +119,16 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 
 <div class="modal-back" id="modalBack"><div class="modal" id="modal"><div class="modal-head"><h2 id="modalTitle">新增支出</h2><button class="close" id="closeModal">×</button></div><div id="modalBody"></div></div></div>
 <div class="toast" id="toast"></div>
+</div><!-- appShell -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script>
 const KEY='jianji-budget-v1';
+const SUPABASE_URL='https://emwzognoixuvtzafxqlv.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY='sb_publishable_yARE-VJ_UUxWXPv-tyKQgg_TrzeXMhR';
+const LOGIN_EMAIL='peter830924@gmail.com';
+const dbClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+let currentUser=null;
 const colors=['#789687','#c49b66','#8796ad','#b77d72','#9b8ba9','#8b9b70','#c18d9d','#8c999b','#c0a56c','#7894a6'];
 const icons=['✈️','🍽️','🚇','🛍️','🏠','☕','🎭','💊','📚','✦'];
 const defaultCats=[
@@ -111,9 +140,37 @@ const defaultCats=[
 {id:'other',name:'其他',color:colors[5],icon:'✦',annual:60000,monthly:5000}
 ];
 function fresh(){return {version:1,categories:defaultCats.map(x=>({...x})),records:[]}}
-let data=load();let activePeriod='month';let activePage='homePage';let editingId=null;
-function load(){try{const x=JSON.parse(localStorage.getItem(KEY));if(x&&Array.isArray(x.categories)&&Array.isArray(x.records))return x}catch(e){}return fresh()}
-function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+let data=fresh();let activePeriod='month';let activePage='homePage';let editingId=null;
+function save(){
+ render();
+ if(!currentUser)return;
+ dbClient.from('app_data').upsert({user_id:currentUser.id,payload:data,updated_at:new Date().toISOString()},{onConflict:'user_id'})
+  .then(({error})=>{if(error){console.error(error);toast('雲端同步失敗，請檢查網路或重新登入')}});
+}
+async function loadCloudData(){
+ const {data:row,error}=await dbClient.from('app_data').select('payload').eq('user_id',currentUser.id).maybeSingle();
+ if(error)throw error;
+ if(row&&row.payload&&Array.isArray(row.payload.categories)&&Array.isArray(row.payload.records))data=row.payload;
+ else {data=fresh();const {error:saveError}=await dbClient.from('app_data').upsert({user_id:currentUser.id,payload:data,updated_at:new Date().toISOString()},{onConflict:'user_id'});if(saveError)throw saveError;}
+}
+function showApp(){document.getElementById('loginScreen').style.display='none';document.getElementById('appShell').style.display='block';init();}
+async function signIn(password){
+ const {data:authData,error}=await dbClient.auth.signInWithPassword({email:LOGIN_EMAIL,password});
+ if(error)throw error;
+ currentUser=authData.user;await loadCloudData();showApp();
+}
+async function boot(){
+ const {data:sessionData,error}=await dbClient.auth.getSession();
+ if(error)console.error(error);
+ if(sessionData.session){currentUser=sessionData.session.user;try{await loadCloudData();showApp();return;}catch(e){console.error(e);await dbClient.auth.signOut();currentUser=null;}}
+ document.getElementById('loginForm').addEventListener('submit',async e=>{
+  e.preventDefault();const btn=document.getElementById('loginButton'),err=document.getElementById('loginError');
+  btn.disabled=true;btn.textContent='登入中…';err.textContent='';
+  try{await signIn(document.getElementById('loginPassword').value);}catch(ex){console.error(ex);err.textContent='登入失敗：請確認密碼，或檢查 Supabase 使用者是否已確認 Email。';}
+  finally{btn.disabled=false;btn.textContent='登入簡記';}
+ });
+}
+
 function money(n){return '$'+Math.round(n||0).toLocaleString('en-US')}
 function dateKey(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')}
 function currentYear(){return new Date().getFullYear()}
@@ -202,10 +259,11 @@ function init(){
  document.getElementById('backupTop').onclick=exportData;document.getElementById('exportBtn').onclick=exportData;document.getElementById('excelBtn').onclick=exportExcel;document.getElementById('settingsTop').onclick=()=>showPage('settingsPage');
  document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value=''};
  document.getElementById('clearBtn').onclick=()=>{if(confirm('確定清除所有分類與支出？請先匯出備份。')){data=fresh();save();toast('資料已清除')}};
+ document.getElementById('logoutBtn').onclick=async()=>{if(confirm('確定登出這台裝置？雲端資料不會刪除。')){await dbClient.auth.signOut();currentUser=null;location.reload()}};
  document.getElementById('closeModal').onclick=closeModal;document.getElementById('modalBack').onclick=e=>{if(e.target.id==='modalBack')closeModal()};
  render();
 }
-init();
+boot().catch(e=>{console.error(e);document.getElementById('loginError').textContent='無法連接雲端服務，請稍後重試。'});
 if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
 </script>
 </body>
