@@ -110,7 +110,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
   <div class="settings-row"><div><b>登出簡記</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
   <div class="settings-row"><div><b>清除所有資料</b><div class="sub">此操作無法復原，請先備份</div></div><button class="secondary danger" id="clearBtn">清除</button></div>
  </div>
- <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.0 · Supabase 雲端同步。建議定期匯出備份。</p>
+ <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.4 · Supabase 雲端同步。建議定期匯出備份。</p>
 </section>
 </div>
 
@@ -261,18 +261,38 @@ function init(){
  document.getElementById('backupTop').onclick=exportData;document.getElementById('exportBtn').onclick=exportData;document.getElementById('excelBtn').onclick=exportExcel;document.getElementById('settingsTop').onclick=()=>showPage('settingsPage');
  document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value=''};
  document.getElementById('clearBtn').onclick=()=>{if(confirm('確定清除所有分類與支出？請先匯出備份。')){data=fresh();save();toast('資料已清除')}};
- document.getElementById('changePasswordBtn').onclick=async()=>{
-  const next=prompt('請輸入新的共用密碼（建議至少 12 個字元）');
-  if(next===null)return;
-  if(next.length<8){alert('密碼至少需要 8 個字元，建議使用 12 個字元以上。');return;}
-  const confirmNext=prompt('請再次輸入新密碼確認');
-  if(confirmNext===null)return;
-  if(next!==confirmNext){alert('兩次輸入的密碼不一致，請重新操作。');return;}
-  try{
-   const {error}=await dbClient.auth.updateUser({password:next});
-   if(error)throw error;
-   alert('共用密碼已成功變更。請使用新密碼登入其他裝置。');
-  }catch(e){console.error(e);alert('密碼變更失敗：'+(e.message||'請稍後再試'))}
+ document.getElementById('changePasswordBtn').onclick=()=>{
+  openModal('變更共用密碼',`<form id="changePasswordForm" autocomplete="off">
+   <div class="sub" style="line-height:1.7;margin-bottom:12px">請設定至少 8 個字元的新密碼。Supabase 目前最多接受 72 個 UTF-8 位元組；中文字通常會占用較多位元組。沒有另外限制只能輸入數字或英文字母。</div>
+   <div class="field"><label for="newPassword">新密碼</label><input id="newPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="輸入新密碼"><div class="sub" id="passwordByteCount" style="margin-top:6px">0 / 72 位元組</div></div>
+   <div class="field"><label for="confirmPassword">再次輸入新密碼</label><input id="confirmPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="再次輸入確認"></div>
+   <button class="primary" id="savePasswordBtn" type="submit">確認變更密碼</button>
+  </form>`);
+  const form=document.getElementById('changePasswordForm');
+  const passwordInput=document.getElementById('newPassword');
+  const byteCount=document.getElementById('passwordByteCount');
+  const saveButton=document.getElementById('savePasswordBtn');
+  const byteLength=value=>new TextEncoder().encode(value).length;
+  passwordInput.addEventListener('input',()=>{
+   const bytes=byteLength(passwordInput.value);
+   byteCount.textContent=`${bytes} / 72 位元組`;
+   byteCount.style.color=bytes>72?'var(--red)':'var(--muted)';
+  });
+  form.onsubmit=async e=>{
+   e.preventDefault();
+   const next=passwordInput.value;
+   const confirmNext=document.getElementById('confirmPassword').value;
+   const bytes=byteLength(next);
+   if(next.length<8){toast('密碼至少需要 8 個字元');return;}
+   if(bytes>72){toast('密碼超過 Supabase 允許的 72 位元組上限');return;}
+   if(next!==confirmNext){toast('兩次輸入的密碼不一致');return;}
+   saveButton.disabled=true;saveButton.textContent='變更中…';
+   try{
+    const {error}=await dbClient.auth.updateUser({password:next});
+    if(error)throw error;
+    closeModal();toast('共用密碼已成功變更，其他裝置請使用新密碼登入');
+   }catch(e){console.error(e);alert('密碼變更失敗：'+(e.message||'請稍後再試'));saveButton.disabled=false;saveButton.textContent='確認變更密碼';}
+  };
  };
  document.getElementById('logoutBtn').onclick=async()=>{if(confirm('確定登出這台裝置？雲端資料不會刪除。')){await dbClient.auth.signOut();currentUser=null;location.reload()}};
  document.getElementById('closeModal').onclick=closeModal;document.getElementById('modalBack').onclick=e=>{if(e.target.id==='modalBack')closeModal()};
