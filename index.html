@@ -29,7 +29,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .progress{height:5px;background:#eeeee9;border-radius:8px;margin-top:8px;overflow:hidden}.progress span{display:block;height:100%;background:var(--green);border-radius:8px}
 .filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}.filter-grid select{width:100%;min-width:0;border:1px solid var(--line);background:white;border-radius:12px;padding:12px;color:var(--ink)}.record-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 2px 12px;color:var(--muted);font-size:12px}.record-summary strong{color:var(--green);font-size:18px;font-variant-numeric:tabular-nums}.record{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line)}.record:last-child{border-bottom:0}.record-icon{width:40px;height:40px;border-radius:14px;background:#f1f1ec;display:grid;place-items:center;font-size:18px}.record-main{flex:1;min-width:0}.record-title{font-weight:650}.record-note{font-size:12px;color:var(--muted);margin-top:3px}.record-amount{font-weight:700;font-variant-numeric:tabular-nums}.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5}.nav-inner{width:min(100%,520px);display:flex;justify-content:space-around}.nav button{border:0;background:transparent;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 14px}.nav button b{font-size:20px;font-weight:400}.nav button.active{color:var(--green)}
-.fab{position:fixed;right:max(22px,calc((100vw - 720px)/2));bottom:85px;background:var(--green);color:white;border:0;border-radius:50px;padding:15px 20px;box-shadow:0 8px 22px #315c4b44;font-weight:700;z-index:4}
+.fab{position:fixed;right:max(22px,calc((100vw - 720px)/2));bottom:85px;width:56px;height:56px;display:grid;place-items:center;padding:0;background:var(--green);color:white;border:0;border-radius:50%;box-shadow:0 8px 22px #315c4b44;font-size:30px;line-height:1;font-weight:500;z-index:4}
 .page{display:none}.page.active{display:block}
 .modal-back{position:fixed;inset:0;background:#15191566;display:none;align-items:end;justify-content:center;z-index:10;padding:12px}.modal-back.show{display:flex}.modal{background:var(--bg);width:min(100%,560px);border-radius:24px 24px 18px 18px;padding:22px;max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#e9e8e2;border-radius:50%;width:32px;height:32px}
 .field{margin:13px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:white;border-radius:12px;padding:13px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:#789687}.amount-input{font-size:28px!important;font-weight:750}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.primary{width:100%;border:0;background:var(--green);color:white;border-radius:13px;padding:14px;font-weight:700;margin-top:8px}.secondary{border:1px solid var(--line);background:white;border-radius:12px;padding:11px 13px;color:var(--ink)}.danger{color:var(--red)}
@@ -37,6 +37,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .stat-bars{display:flex;align-items:end;gap:8px;height:150px;padding:10px 2px 0}.stat-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:7px}.stat-col span{width:100%;max-width:28px;background:#b8c9bf;border-radius:7px 7px 2px 2px;min-height:3px}.stat-col small{font-size:10px;color:var(--muted)}
 .settings-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.settings-row:last-child{border:0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#252824;color:white;padding:11px 16px;border-radius:30px;font-size:13px;display:none;z-index:20}
+@media(max-width:619px){.fab{right:18px;bottom:calc(100px + env(safe-area-inset-bottom));width:56px;height:56px;font-size:30px}}
 @media(min-width:620px){.app{padding-top:32px}.modal-back{align-items:center}.modal{border-radius:24px}}
 
 .login-screen{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
@@ -103,6 +104,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
   <div class="settings-row"><div><b>分類管理</b><div class="sub">新增、修改或刪除分類</div></div><button class="secondary" id="manageCats">管理</button></div>
   <div class="settings-row"><div><b>年度與月度預算</b><div class="sub">逐分類設定兩種預算</div></div><button class="secondary" id="manageBudgets2">管理</button></div>
   <div class="settings-row"><div><b>匯出 Excel</b><div class="sub">下載支出明細與分類預算（.xlsx）</div></div><button class="secondary" id="excelBtn">匯出</button></div>
+  <div class="settings-row"><div><b>變更共用密碼</b><div class="sub">修改手機與電腦共用的登入密碼</div></div><button class="secondary" id="changePasswordBtn">變更</button></div>
   <div class="settings-row"><div><b>資料備份</b><div class="sub">下載 JSON 檔保存資料</div></div><button class="secondary" id="exportBtn">備份</button></div>
   <div class="settings-row"><div><b>匯入備份</b><div class="sub">從 JSON 檔還原</div></div><button class="secondary" id="importBtn">匯入</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
   <div class="settings-row"><div><b>登出簡記</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
@@ -112,7 +114,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 </section>
 </div>
 
-<button class="fab" id="addExpense">＋ 記一筆</button>
+<button class="fab" id="addExpense" aria-label="新增支出" title="新增支出">＋</button>
 <nav class="nav"><div class="nav-inner">
 <button class="active" data-page="homePage"><b>⌂</b>總覽</button><button data-page="recordsPage"><b>≡</b>紀錄</button><button data-page="statsPage"><b>▥</b>統計</button><button data-page="settingsPage"><b>⚙</b>設定</button>
 </div></nav>
@@ -259,6 +261,19 @@ function init(){
  document.getElementById('backupTop').onclick=exportData;document.getElementById('exportBtn').onclick=exportData;document.getElementById('excelBtn').onclick=exportExcel;document.getElementById('settingsTop').onclick=()=>showPage('settingsPage');
  document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value=''};
  document.getElementById('clearBtn').onclick=()=>{if(confirm('確定清除所有分類與支出？請先匯出備份。')){data=fresh();save();toast('資料已清除')}};
+ document.getElementById('changePasswordBtn').onclick=async()=>{
+  const next=prompt('請輸入新的共用密碼（建議至少 12 個字元）');
+  if(next===null)return;
+  if(next.length<8){alert('密碼至少需要 8 個字元，建議使用 12 個字元以上。');return;}
+  const confirmNext=prompt('請再次輸入新密碼確認');
+  if(confirmNext===null)return;
+  if(next!==confirmNext){alert('兩次輸入的密碼不一致，請重新操作。');return;}
+  try{
+   const {error}=await dbClient.auth.updateUser({password:next});
+   if(error)throw error;
+   alert('共用密碼已成功變更。請使用新密碼登入其他裝置。');
+  }catch(e){console.error(e);alert('密碼變更失敗：'+(e.message||'請稍後再試'))}
+ };
  document.getElementById('logoutBtn').onclick=async()=>{if(confirm('確定登出這台裝置？雲端資料不會刪除。')){await dbClient.auth.signOut();currentUser=null;location.reload()}};
  document.getElementById('closeModal').onclick=closeModal;document.getElementById('modalBack').onclick=e=>{if(e.target.id==='modalBack')closeModal()};
  render();
