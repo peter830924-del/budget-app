@@ -263,9 +263,9 @@ function init(){
  document.getElementById('clearBtn').onclick=()=>{if(confirm('確定清除所有分類與支出？請先匯出備份。')){data=fresh();save();toast('資料已清除')}};
  document.getElementById('changePasswordBtn').onclick=()=>{
   openModal('變更共用密碼',`<form id="changePasswordForm" autocomplete="off">
-   <div class="sub" style="line-height:1.7;margin-bottom:12px">請設定至少 8 個字元的新密碼。Supabase 目前最多接受 72 個 UTF-8 位元組；中文字通常會占用較多位元組。沒有另外限制只能輸入數字或英文字母。</div>
-   <div class="field"><label for="newPassword">新密碼</label><input id="newPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="輸入新密碼"><div class="sub" id="passwordByteCount" style="margin-top:6px">0 / 72 位元組</div></div>
-   <div class="field"><label for="confirmPassword">再次輸入新密碼</label><input id="confirmPassword" type="password" autocomplete="new-password" required minlength="8" placeholder="再次輸入確認"></div>
+   <div class="sub" style="line-height:1.7;margin-bottom:12px">新密碼不再要求至少 8 個字元，可使用英文、數字、符號或中文。Supabase 目前最多接受 72 個 UTF-8 位元組；中文字通常會占用較多位元組。</div>
+   <div class="field"><label for="newPassword">新密碼</label><input id="newPassword" type="password" autocomplete="new-password" required placeholder="輸入新密碼"><div class="sub" id="passwordByteCount" style="margin-top:6px">0 / 72 位元組</div></div>
+   <div class="field"><label for="confirmPassword">再次輸入新密碼</label><input id="confirmPassword" type="password" autocomplete="new-password" required placeholder="再次輸入確認"></div>
    <button class="primary" id="savePasswordBtn" type="submit">確認變更密碼</button>
   </form>`);
   const form=document.getElementById('changePasswordForm');
@@ -283,7 +283,6 @@ function init(){
    const next=passwordInput.value;
    const confirmNext=document.getElementById('confirmPassword').value;
    const bytes=byteLength(next);
-   if(next.length<8){toast('密碼至少需要 8 個字元');return;}
    if(bytes>72){toast('密碼超過 Supabase 允許的 72 位元組上限');return;}
    if(next!==confirmNext){toast('兩次輸入的密碼不一致');return;}
    saveButton.disabled=true;saveButton.textContent='變更中…';
