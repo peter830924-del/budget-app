@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="簡記">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>簡記｜個人預算</title>
+<title>簡記 v3.6｜個人預算</title>
 <style>
 :root{--bg:#f6f5f1;--paper:#fff;--ink:#20211f;--muted:#858780;--line:#e9e8e2;--green:#315c4b;--green2:#e8f0eb;--red:#b65a4b;--gold:#b58b4d;--shadow:0 8px 28px rgba(30,35,30,.055);--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);font-size:15px}
@@ -29,7 +29,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .progress{height:5px;background:#eeeee9;border-radius:8px;margin-top:8px;overflow:hidden}.progress span{display:block;height:100%;background:var(--green);border-radius:8px}
 .filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}.filter-grid select{width:100%;min-width:0;border:1px solid var(--line);background:white;border-radius:12px;padding:12px;color:var(--ink)}.record-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 2px 12px;color:var(--muted);font-size:12px}.record-summary strong{color:var(--green);font-size:18px;font-variant-numeric:tabular-nums}.record{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line)}.record:last-child{border-bottom:0}.record-icon{width:40px;height:40px;border-radius:14px;background:#f1f1ec;display:grid;place-items:center;font-size:18px}.record-main{flex:1;min-width:0}.record-title{font-weight:650}.record-note{font-size:12px;color:var(--muted);margin-top:3px}.record-amount{font-weight:700;font-variant-numeric:tabular-nums}.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5}.nav-inner{width:min(100%,520px);display:flex;justify-content:space-around}.nav button{border:0;background:transparent;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 14px}.nav button b{font-size:20px;font-weight:400}.nav button.active{color:var(--green)}
-.fab{position:fixed;right:max(22px,calc((100vw - 720px)/2));bottom:85px;width:56px;height:56px;display:grid;place-items:center;padding:0;background:var(--green);color:white;border:0;border-radius:50%;box-shadow:0 8px 22px #315c4b44;font-size:30px;line-height:1;font-weight:500;z-index:4}
+.fab{position:fixed;right:max(22px,calc((100vw - 720px)/2));bottom:85px;background:var(--green);color:white;border:0;border-radius:50px;padding:15px 20px;box-shadow:0 8px 22px #315c4b44;font-weight:700;z-index:4}
 .page{display:none}.page.active{display:block}
 .modal-back{position:fixed;inset:0;background:#15191566;display:none;align-items:end;justify-content:center;z-index:10;padding:12px}.modal-back.show{display:flex}.modal{background:var(--bg);width:min(100%,560px);border-radius:24px 24px 18px 18px;padding:22px;max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#e9e8e2;border-radius:50%;width:32px;height:32px}
 .field{margin:13px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:white;border-radius:12px;padding:13px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:#789687}.amount-input{font-size:28px!important;font-weight:750}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.primary{width:100%;border:0;background:var(--green);color:white;border-radius:13px;padding:14px;font-weight:700;margin-top:8px}.secondary{border:1px solid var(--line);background:white;border-radius:12px;padding:11px 13px;color:var(--ink)}.danger{color:var(--red)}
@@ -37,7 +37,6 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .stat-bars{display:flex;align-items:end;gap:8px;height:150px;padding:10px 2px 0}.stat-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:end;height:100%;gap:7px}.stat-col span{width:100%;max-width:28px;background:#b8c9bf;border-radius:7px 7px 2px 2px;min-height:3px}.stat-col small{font-size:10px;color:var(--muted)}
 .settings-row{display:flex;justify-content:space-between;align-items:center;padding:15px 0;border-bottom:1px solid var(--line)}.settings-row:last-child{border:0}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:90px;background:#252824;color:white;padding:11px 16px;border-radius:30px;font-size:13px;display:none;z-index:20}
-@media(max-width:619px){.fab{right:18px;bottom:calc(100px + env(safe-area-inset-bottom));width:56px;height:56px;font-size:30px}}
 @media(min-width:620px){.app{padding-top:32px}.modal-back{align-items:center}.modal{border-radius:24px}}
 
 .login-screen{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;align-items:center;justify-content:center;padding:24px}
@@ -64,7 +63,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 </div>
 <div id="appShell">
 <div class="app">
-<header><div class="brand">簡記<small>PERSONAL FINANCE</small></div><div class="header-actions"><button class="icon-btn" id="backupTop" aria-label="備份">↥</button><button class="icon-btn" id="settingsTop" aria-label="設定">⚙</button></div></header>
+<header><div class="brand">簡記<small>PERSONAL FINANCE · v3.6</small></div><div class="header-actions"><button class="icon-btn" id="backupTop" aria-label="備份">↥</button><button class="icon-btn" id="settingsTop" aria-label="設定">⚙</button></div></header>
 
 <section id="homePage" class="page active">
  <div class="topline"><div><h1>收支總覽</h1><div class="sub" id="todayLabel"></div></div><div class="period"><select id="yearSelect"></select><span class="sub">年度</span></div></div>
@@ -110,11 +109,11 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
   <div class="settings-row"><div><b>登出簡記</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
   <div class="settings-row"><div><b>清除所有資料</b><div class="sub">此操作無法復原，請先備份</div></div><button class="secondary danger" id="clearBtn">清除</button></div>
  </div>
- <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.4 · Supabase 雲端同步。建議定期匯出備份。</p>
+ <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.0 · Supabase 雲端同步。建議定期匯出備份。</p>
 </section>
 </div>
 
-<button class="fab" id="addExpense" aria-label="新增支出" title="新增支出">＋</button>
+<button class="fab" id="addExpense">＋ 記一筆</button>
 <nav class="nav"><div class="nav-inner">
 <button class="active" data-page="homePage"><b>⌂</b>總覽</button><button data-page="recordsPage"><b>≡</b>紀錄</button><button data-page="statsPage"><b>▥</b>統計</button><button data-page="settingsPage"><b>⚙</b>設定</button>
 </div></nav>
@@ -141,10 +140,13 @@ const defaultCats=[
 {id:'home',name:'居家',color:colors[4],icon:'🏠',annual:120000,monthly:10000},
 {id:'other',name:'其他',color:colors[5],icon:'✦',annual:60000,monthly:5000}
 ];
-function fresh(){return {version:1,categories:defaultCats.map(x=>({...x})),records:[]}}
+function fresh(){return {version:3,categories:defaultCats.map(x=>({...x})),records:[],budgetsByYear:{},carryovers:{}}}
+function ensureBudgetData(){if(!data.budgetsByYear)data.budgetsByYear={};if(!data.carryovers)data.carryovers={};const y=String(currentYear());if(!data.budgetsByYear[y]){data.budgetsByYear[y]={};data.categories.forEach(c=>data.budgetsByYear[y][c.id]={annual:Number(c.annual)||0,monthly:Number(c.monthly)||0});}}
+function getBudget(catId,y,kind){ensureBudgetData();const entry=data.budgetsByYear[String(y)]?.[catId];if(entry&&entry[kind]!=null)return Number(entry[kind])||0;const c=cat(catId);return Number(c[kind])||0}
+function getCarry(catId,y){ensureBudgetData();return Number(data.carryovers[String(y)]?.[catId]||0)}
 let data=fresh();let activePeriod='month';let activePage='homePage';let editingId=null;
 function save(){
- render();
+ ensureBudgetData();render();
  if(!currentUser)return;
  dbClient.from('app_data').upsert({user_id:currentUser.id,payload:data,updated_at:new Date().toISOString()},{onConflict:'user_id'})
   .then(({error})=>{if(error){console.error(error);toast('雲端同步失敗，請檢查網路或重新登入')}});
@@ -187,7 +189,7 @@ function cat(id){return data.categories.find(c=>c.id===id)||{name:'已刪除分�
 function render(){
  const y=selectedYear(),m=new Date().getMonth()+1,periodMonth=activePeriod==='month';
  const spent=periodMonth?totalMonth(y,m):totalYear(y);
- const budget=data.categories.reduce((s,c)=>s+(periodMonth?c.monthly:c.annual),0);
+ const budget=data.categories.reduce((s,c)=>s+(periodMonth?getBudget(c.id,y,'monthly'):getBudget(c.id,y,'annual')+getCarry(c.id,y)),0);
  document.getElementById('heroCaption').textContent=periodMonth?`${m} 月支出`:'全年支出';
  document.getElementById('heroSpent').textContent=money(spent);
  document.getElementById('heroBudget').textContent=`預算 ${money(budget)}`;
@@ -196,7 +198,7 @@ function render(){
  document.getElementById('yearSpent').textContent=money(totalYear(y));
  document.getElementById('monthCount').textContent=data.records.filter(r=>r.date.startsWith(`${y}-${String(m).padStart(2,'0')}`)).length;
  const ov=document.getElementById('categoryOverview');
- ov.innerHTML=data.categories.map(c=>{let s=periodMonth?monthSpent(c.id,y,m):yearSpent(c.id,y),b=periodMonth?c.monthly:c.annual,p=b?s/b*100:(s?100:0),remain=b-s;return `<div class="category"><span class="dot" style="background:${c.color}"></span><div class="cat-info"><div class="cat-name">${esc(c.name)}</div><div class="cat-sub">已用 ${money(s)} ／ 預算 ${money(b)}</div><div class="progress"><span style="width:${Math.min(100,p)}%;background:${c.color}"></span></div></div><div class="cat-values"><strong style="color:${remain<0?'var(--red)':'var(--green)'}">${money(remain)}</strong><small>剩餘預算</small></div></div>`}).join('')||'<div class="empty">尚未建立分類</div>';
+ ov.innerHTML=data.categories.map(c=>{let s=periodMonth?monthSpent(c.id,y,m):yearSpent(c.id,y),b=periodMonth?getBudget(c.id,y,'monthly'):getBudget(c.id,y,'annual')+getCarry(c.id,y),p=b?s/b*100:(s?100:0),remain=b-s;return `<div class="category"><span class="dot" style="background:${c.color}"></span><div class="cat-info"><div class="cat-name">${esc(c.name)}</div><div class="cat-sub">已用 ${money(s)} ／ 預算 ${money(b)}</div><div class="progress"><span style="width:${Math.min(100,p)}%;background:${c.color}"></span></div></div><div class="cat-values"><strong style="color:${remain<0?'var(--red)':'var(--green)'}">${money(remain)}</strong><small>剩餘預算</small></div></div>`}).join('')||'<div class="empty">尚未建立分類</div>';
  const recent=[...data.records].sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created).slice(0,5);
  document.getElementById('recentRecords').innerHTML=recordsHTML(recent,true);
  const yearEl=document.getElementById('recordYearFilter'), monthEl=document.getElementById('recordMonthFilter'), catEl=document.getElementById('recordCategoryFilter');
@@ -226,7 +228,7 @@ function expenseForm(r={}){const opts=data.categories.map(c=>`<option value="${c
  if(r.id)document.getElementById('deleteRecord').onclick=()=>{if(confirm('確定刪除此筆支出？')){data.records=data.records.filter(x=>x.id!==r.id);closeModal();save();toast('已刪除')}};
 }
 window.editRecord=id=>{let r=data.records.find(x=>x.id===id);if(r)expenseForm(r)};
-function budgetModal(){let y=selectedYear();openModal(`${y} 年預算設定`,`<div class="sub" style="margin-bottom:12px">同一分類可同時設定年度額度與每月額度；支出會同步計入兩者。</div><div id="budgetRows">${data.categories.map(c=>`<div class="budget-row"><div class="budget-label"><span class="dot" style="background:${c.color}"></span>${esc(c.name)}</div><div class="budget-inputs"><label>年度預算（元）<input type="number" min="0" step="1" data-id="${c.id}" data-kind="annual" value="${c.annual}"></label><label>每月預算（元）<input type="number" min="0" step="1" data-id="${c.id}" data-kind="monthly" value="${c.monthly}"></label></div></div>`).join('')}</div><button class="primary" id="saveBudgets">儲存預算</button>`);document.getElementById('saveBudgets').onclick=()=>{document.querySelectorAll('#budgetRows input').forEach(i=>{let c=cat(i.dataset.id),v=Number(i.value);if(Number.isFinite(v)&&v>=0)c[i.dataset.kind]=v});closeModal();save();toast('預算已更新')}}
+function budgetModal(){let y=selectedYear();ensureBudgetData();if(!data.budgetsByYear[String(y)])data.budgetsByYear[String(y)]={};const rows=()=>data.categories.map(c=>{let b=data.budgetsByYear[String(y)][c.id]||{annual:Number(c.annual)||0,monthly:Number(c.monthly)||0};return `<div class="budget-row"><div class="budget-label"><span class="dot" style="background:${c.color}"></span>${esc(c.name)} <span class="sub">結轉 ${money(getCarry(c.id,y))}</span></div><div class="budget-inputs"><label>年度預算（元）<input type="number" min="0" step="1" data-id="${c.id}" data-kind="annual" value="${b.annual}"></label><label>每月預算（元）<input type="number" min="0" step="1" data-id="${c.id}" data-kind="monthly" value="${b.monthly}"></label></div></div>`}).join('');openModal(`${y} 年預算設定`,`<div class="sub" style="margin-bottom:12px">各年度預算獨立保存，修改本年度不會影響其他年度。結轉額會加到年度可用預算。</div><div id="budgetRows">${rows()}</div><button class="primary" id="saveBudgets">儲存 ${y} 年預算</button><button class="secondary" id="carryBudget" style="width:100%;margin-top:9px">將 ${y-1} 年未用完預算結轉至 ${y} 年</button>`);document.getElementById('saveBudgets').onclick=()=>{let key=String(y);if(!data.budgetsByYear[key])data.budgetsByYear[key]={};document.querySelectorAll('#budgetRows input').forEach(i=>{let v=Number(i.value);if(Number.isFinite(v)&&v>=0){if(!data.budgetsByYear[key][i.dataset.id])data.budgetsByYear[key][i.dataset.id]={annual:0,monthly:0};data.budgetsByYear[key][i.dataset.id][i.dataset.kind]=v}});closeModal();save();toast(`${y} 年預算已更新`)};document.getElementById('carryBudget').onclick=()=>{let prev=String(y-1),key=String(y);if(!confirm(`將 ${y-1} 年各分類未用完的年度預算結轉到 ${y} 年？既有結轉額將被本次計算結果取代。`))return;if(!data.budgetsByYear[key])data.budgetsByYear[key]={};if(!data.carryovers[key])data.carryovers[key]={};data.categories.forEach(c=>{let oldBudget=getBudget(c.id,y-1,'annual')+getCarry(c.id,y-1);let remaining=Math.max(0,oldBudget-yearSpent(c.id,y-1));data.carryovers[key][c.id]=remaining;if(!data.budgetsByYear[key][c.id])data.budgetsByYear[key][c.id]={annual:getBudget(c.id,y,'annual'),monthly:getBudget(c.id,y,'monthly')}});closeModal();save();toast(`${y-1} 年未用完預算已結轉`);}}
 function categoriesModal(){openModal('分類管理',`<div class="sub" style="margin-bottom:10px">使用上、下按鈕調整分類顯示順序。</div><div id="catRows">${data.categories.map((c,i)=>`<div class="settings-row"><div><b>${esc(c.name)}</b></div><div style="display:flex;gap:6px;align-items:center"><button class="secondary" onclick="moveCat('${c.id}',-1)" ${i===0?'disabled':''}>↑</button><button class="secondary" onclick="moveCat('${c.id}',1)" ${i===data.categories.length-1?'disabled':''}>↓</button><button class="secondary" onclick="renameCat('${c.id}')">改名</button></div></div>`).join('')}</div><div class="field"><label>新增分類名稱</label><input id="newCatName" maxlength="16" placeholder="例如：保險"></div><button class="primary" id="addCatBtn">新增分類</button>`);document.getElementById('addCatBtn').onclick=()=>{let n=document.getElementById('newCatName').value.trim();if(!n)return toast('請輸入分類名稱');if(data.categories.some(c=>c.name===n))return toast('分類已存在');data.categories.push({id:crypto.randomUUID(),name:n,color:colors[data.categories.length%colors.length],icon:'',annual:0,monthly:0});closeModal();save();toast('分類已新增')}}
 window.moveCat=(id,dir)=>{let i=data.categories.findIndex(c=>c.id===id),j=i+dir;if(i<0||j<0||j>=data.categories.length)return;[data.categories[i],data.categories[j]]=[data.categories[j],data.categories[i]];save();categoriesModal()};
 window.renameCat=id=>{let c=cat(id),n=prompt('請輸入新的分類名稱',c.name);if(n&&n.trim()){c.name=n.trim().slice(0,16);save();categoriesModal()}};
@@ -240,14 +242,15 @@ function exportExcel(){
  ws1['!cols']=[{wch:14},{wch:16},{wch:10},{wch:14},{wch:30}];
  XLSX.utils.book_append_sheet(wb,ws1,'支出明細');
  const y=selectedYear();
- const budgets=data.categories.map(c=>{const spent=yearSpent(c.id,y);return {年度:y,分類:c.name,年度預算:Number(c.annual)||0,年度已支出:spent,年度預算餘額:(Number(c.annual)||0)-spent,每月預算:Number(c.monthly)||0}});
+ const budgets=data.categories.map(c=>{const spent=yearSpent(c.id,y),annual=getBudget(c.id,y,'annual'),carry=getCarry(c.id,y);return {年度:y,分類:c.name,年度預算:annual,結轉預算:carry,年度可用預算:annual+carry,年度已支出:spent,年度預算餘額:annual+carry-spent,每月預算:getBudget(c.id,y,'monthly')}});
  const ws2=XLSX.utils.json_to_sheet(budgets.length?budgets:[{年度:y,分類:'尚無分類'}]);
  ws2['!cols']=[{wch:10},{wch:16},{wch:16},{wch:16},{wch:18},{wch:16}];
  XLSX.utils.book_append_sheet(wb,ws2,'分類預算');
  XLSX.writeFile(wb,`簡記_${y}年支出報表.xlsx`);toast('Excel 檔已匯出');
 }
-function importData(file){let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!Array.isArray(x.categories)||!Array.isArray(x.records))throw Error();if(!confirm('匯入會取代目前裝置上的資料，確定繼續？'))return;data={version:1,categories:x.categories,records:x.records};save();toast('資料已還原')}catch(e){alert('檔案格式不正確，無法匯入')}};reader.readAsText(file)}
+function importData(file){let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!Array.isArray(x.categories)||!Array.isArray(x.records))throw Error();if(!confirm('匯入會取代目前裝置上的資料，確定繼續？'))return;data={...x,version:3,categories:x.categories,records:x.records,budgetsByYear:x.budgetsByYear||{},carryovers:x.carryovers||{}};ensureBudgetData();save();toast('資料已還原')}catch(e){alert('檔案格式不正確，無法匯入')}};reader.readAsText(file)}
 function init(){
+ ensureBudgetData();
  let now=new Date();document.getElementById('todayLabel').textContent=`${now.getFullYear()} 年 ${now.getMonth()+1} 月`;
  let years=new Set();for(let yy=Math.min(currentYear(),2026);yy<=Math.max(currentYear()+8,2035);yy++)years.add(yy);data.records.forEach(r=>years.add(Number(r.date.slice(0,4))));let opts=[...years].sort((a,b)=>b-a).map(y=>`<option value="${y}" ${y===currentYear()?'selected':''}>${y}</option>`).join('');document.getElementById('yearSelect').innerHTML=opts;document.getElementById('statsYear').innerHTML=opts;
  const recordYears=[...years].sort((a,b)=>b-a);document.getElementById('recordYearFilter').innerHTML='<option value="all">全部年度</option>'+recordYears.map(y=>`<option value="${y}" ${y===currentYear()?'selected':''}>${y} 年</option>`).join('');
@@ -261,37 +264,18 @@ function init(){
  document.getElementById('backupTop').onclick=exportData;document.getElementById('exportBtn').onclick=exportData;document.getElementById('excelBtn').onclick=exportExcel;document.getElementById('settingsTop').onclick=()=>showPage('settingsPage');
  document.getElementById('importBtn').onclick=()=>document.getElementById('importFile').click();document.getElementById('importFile').onchange=e=>{if(e.target.files[0])importData(e.target.files[0]);e.target.value=''};
  document.getElementById('clearBtn').onclick=()=>{if(confirm('確定清除所有分類與支出？請先匯出備份。')){data=fresh();save();toast('資料已清除')}};
- document.getElementById('changePasswordBtn').onclick=()=>{
-  openModal('變更共用密碼',`<form id="changePasswordForm" autocomplete="off">
-   <div class="sub" style="line-height:1.7;margin-bottom:12px">新密碼不再要求至少 8 個字元，可使用英文、數字、符號或中文。Supabase 目前最多接受 72 個 UTF-8 位元組；中文字通常會占用較多位元組。</div>
-   <div class="field"><label for="newPassword">新密碼</label><input id="newPassword" type="password" autocomplete="new-password" required placeholder="輸入新密碼"><div class="sub" id="passwordByteCount" style="margin-top:6px">0 / 72 位元組</div></div>
-   <div class="field"><label for="confirmPassword">再次輸入新密碼</label><input id="confirmPassword" type="password" autocomplete="new-password" required placeholder="再次輸入確認"></div>
-   <button class="primary" id="savePasswordBtn" type="submit">確認變更密碼</button>
-  </form>`);
-  const form=document.getElementById('changePasswordForm');
-  const passwordInput=document.getElementById('newPassword');
-  const byteCount=document.getElementById('passwordByteCount');
-  const saveButton=document.getElementById('savePasswordBtn');
-  const byteLength=value=>new TextEncoder().encode(value).length;
-  passwordInput.addEventListener('input',()=>{
-   const bytes=byteLength(passwordInput.value);
-   byteCount.textContent=`${bytes} / 72 位元組`;
-   byteCount.style.color=bytes>72?'var(--red)':'var(--muted)';
-  });
-  form.onsubmit=async e=>{
-   e.preventDefault();
-   const next=passwordInput.value;
-   const confirmNext=document.getElementById('confirmPassword').value;
-   const bytes=byteLength(next);
-   if(bytes>72){toast('密碼超過 Supabase 允許的 72 位元組上限');return;}
-   if(next!==confirmNext){toast('兩次輸入的密碼不一致');return;}
-   saveButton.disabled=true;saveButton.textContent='變更中…';
-   try{
-    const {error}=await dbClient.auth.updateUser({password:next});
-    if(error)throw error;
-    closeModal();toast('共用密碼已成功變更，其他裝置請使用新密碼登入');
-   }catch(e){console.error(e);alert('密碼變更失敗：'+(e.message||'請稍後再試'));saveButton.disabled=false;saveButton.textContent='確認變更密碼';}
-  };
+ document.getElementById('changePasswordBtn').onclick=async()=>{
+  const next=prompt('請輸入新的共用密碼（建議至少 12 個字元）');
+  if(next===null)return;
+  if(next.length<8){alert('密碼至少需要 8 個字元，建議使用 12 個字元以上。');return;}
+  const confirmNext=prompt('請再次輸入新密碼確認');
+  if(confirmNext===null)return;
+  if(next!==confirmNext){alert('兩次輸入的密碼不一致，請重新操作。');return;}
+  try{
+   const {error}=await dbClient.auth.updateUser({password:next});
+   if(error)throw error;
+   alert('共用密碼已成功變更。請使用新密碼登入其他裝置。');
+  }catch(e){console.error(e);alert('密碼變更失敗：'+(e.message||'請稍後再試'))}
  };
  document.getElementById('logoutBtn').onclick=async()=>{if(confirm('確定登出這台裝置？雲端資料不會刪除。')){await dbClient.auth.signOut();currentUser=null;location.reload()}};
  document.getElementById('closeModal').onclick=closeModal;document.getElementById('modalBack').onclick=e=>{if(e.target.id==='modalBack')closeModal()};
