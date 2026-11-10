@@ -1,20 +1,42 @@
-const CACHE_NAME = "jianji-budget-cloud-v3.5";
-const APP_FILES = ["./", "./index.html", "./manifest.json", "./icon.svg"];
-self.addEventListener("install", event => {
-  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_FILES)).then(() => self.skipWaiting()));
+/* 簡記 PWA Service Worker — network-first shell + safe cache cleanup */
+const CACHE_NAME = 'jianji-budget-v1-auto-update';
+const APP_CACHE_PREFIX = 'jianji-budget-';
+const APP_SHELL = ['./', './index.html', './manifest.json', './icon.svg'];
+
+self.addEventListener('install', event => {
+  event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));
 });
-self.addEventListener("activate", event => {
-  event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));
+
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
-self.addEventListener("fetch", event => {
-  if (event.request.method !== "GET") return;
-  const url = new URL(event.request.url);
-  if (url.origin !== self.location.origin) return;
-  if (event.request.mode === "navigate") {
-    event.respondWith(fetch(event.request).then(response => {
-      const copy = response.clone(); caches.open(CACHE_NAME).then(cache => cache.put("./index.html", copy)); return response;
-    }).catch(() => caches.match("./index.html")));
-    return;
-  }
-  event.respondWith(caches.match(event.request).then(cached => cached || fetch(event.request)));
+
+self.addEventListener('activate', event => {
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.filter(key => key.startsWith(APP_CACHE_PREFIX) && key !== CACHE_NAME).map(key => caches.delete(key)));
+    await self.clients.claim();
+  })());
+});
+
+self.addEventListener('fetch', event => {
+  const request = event.request;
+  const url = new URL(request.url);
+  if (request.method !== 'GET' || url.origin !== self.location.origin) return;
+  event.respondWith((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    try {
+      const response = request.mode === 'navigate' ? await fetch(request, { cache: 'no-store' }) : await fetch(request);
+      if (response && response.ok && response.type === 'basic') await cache.put(request, response.clone());
+      return response;
+    } catch (error) {
+      const cached = await cache.match(request);
+      if (cached) return cached;
+      if (request.mode === 'navigate') {
+        const fallback = await cache.match('./index.html');
+        if (fallback) return fallback;
+      }
+      throw error;
+    }
+  })());
 });

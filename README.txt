@@ -1,16 +1,7 @@
-簡記 v3.4 更新包
+簡記 v3.7｜PWA 自動更新版
 
-本次更新：
-1. 變更共用密碼改為正式表單介面，可輸入新密碼並再次確認。
-2. 密碼至少 8 個字元；依 Supabase Auth / bcrypt 限制，最多 72 個 UTF-8 位元組，並非無限長。
-3. 不限制密碼必須包含數字；可使用英文字母、數字及符號。中文字會占用多個位元組。
-4. 保留原有 Supabase 登入、雲端資料、分類、預算、收支紀錄及 Excel 匯出。
-5. 保留手機版圓形「＋」按鈕位置調整，更新 Service Worker 快取版本。
+請將 ZIP 內全部檔案（index.html、manifest.json、icon.svg、sw.js）覆蓋 GitHub Pages 專案根目錄同名檔案並 Commit。
 
-更新方式：
-1. 解壓縮本 ZIP。
-2. 將 index.html 與 sw.js 上傳至 GitHub 專案根目錄，覆蓋同名檔案。
-3. 不要刪除或重建 Supabase 使用者、資料表或 app_data 資料。
-4. GitHub Pages 部署完成後，關閉並重新開啟手機上的簡記；若仍是舊版，清除網站快取後再開啟。
+本版加入 Service Worker 主動更新檢查。GitHub Pages 發布新檔後，已安裝的 PWA 在下次連線開啟時會檢查新版，安裝完成後自動重新載入。離線時會使用快取版本。
 
-變更密碼：先在已登入的裝置開啟「設定」→「變更共用密碼」，輸入兩次新密碼並確認。此功能使用目前登入中的 Supabase session。變更後，其他裝置可能需要重新登入。
+不會清除 localStorage、IndexedDB 或 Supabase 雲端資料。第三方 CDN（Supabase JS、SheetJS）維持由網路載入，不會快取第三方 API 回應。

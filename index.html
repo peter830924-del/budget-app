@@ -6,10 +6,10 @@
 <meta name="theme-color" content="#f6f5f1">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="煦禾">
+<meta name="apple-mobile-web-app-title" content="簡記">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
-<title>煦禾 v3.6｜個人財務</title>
+<title>簡記 v3.6｜個人預算</title>
 <style>
 :root{--bg:#f6f5f1;--paper:#fff;--ink:#20211f;--muted:#858780;--line:#e9e8e2;--green:#315c4b;--green2:#e8f0eb;--red:#b65a4b;--gold:#b58b4d;--shadow:0 8px 28px rgba(30,35,30,.055);--radius:20px}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);font-size:15px}
@@ -29,8 +29,7 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 .progress{height:5px;background:#eeeee9;border-radius:8px;margin-top:8px;overflow:hidden}.progress span{display:block;height:100%;background:var(--green);border-radius:8px}
 .filter-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:0 0 12px}.filter-grid select{width:100%;min-width:0;border:1px solid var(--line);background:white;border-radius:12px;padding:12px;color:var(--ink)}.record-summary{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 2px 12px;color:var(--muted);font-size:12px}.record-summary strong{color:var(--green);font-size:18px;font-variant-numeric:tabular-nums}.record{display:flex;align-items:center;gap:12px;padding:12px 2px;border-bottom:1px solid var(--line)}.record:last-child{border-bottom:0}.record-icon{width:40px;height:40px;border-radius:14px;background:#f1f1ec;display:grid;place-items:center;font-size:18px}.record-main{flex:1;min-width:0}.record-title{font-weight:650}.record-note{font-size:12px;color:var(--muted);margin-top:3px}.record-amount{font-weight:700;font-variant-numeric:tabular-nums}.empty{text-align:center;color:var(--muted);padding:28px 10px;font-size:13px}
 .nav{position:fixed;bottom:0;left:0;right:0;background:#ffffffed;backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:9px 14px calc(9px + env(safe-area-inset-bottom));display:flex;justify-content:center;z-index:5}.nav-inner{width:min(100%,520px);display:flex;justify-content:space-around}.nav button{border:0;background:transparent;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;gap:4px;padding:5px 14px}.nav button b{font-size:20px;font-weight:400}.nav button.active{color:var(--green)}
-.fab{position:fixed;right:max(24px,calc((100vw - 704px)/2));bottom:calc(100px + env(safe-area-inset-bottom));width:48px;height:48px;display:grid;place-items:center;padding:0;background:var(--green);color:white;border:0;border-radius:50%;box-shadow:0 6px 18px #315c4b3b;font-size:27px;font-weight:500;line-height:1;z-index:6;-webkit-tap-highlight-color:transparent}
-@media(max-width:619px){.fab{right:28px;bottom:calc(94px + env(safe-area-inset-bottom));width:46px;height:46px;font-size:26px}}
+.fab{position:fixed;right:max(22px,calc((100vw - 720px)/2));bottom:85px;background:var(--green);color:white;border:0;border-radius:50px;padding:15px 20px;box-shadow:0 8px 22px #315c4b44;font-weight:700;z-index:4}
 .page{display:none}.page.active{display:block}
 .modal-back{position:fixed;inset:0;background:#15191566;display:none;align-items:end;justify-content:center;z-index:10;padding:12px}.modal-back.show{display:flex}.modal{background:var(--bg);width:min(100%,560px);border-radius:24px 24px 18px 18px;padding:22px;max-height:90vh;overflow:auto}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.close{border:0;background:#e9e8e2;border-radius:50%;width:32px;height:32px}
 .field{margin:13px 0}.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:7px}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);background:white;border-radius:12px;padding:13px;color:var(--ink);outline:none}.field input:focus,.field select:focus{border-color:#789687}.amount-input{font-size:28px!important;font-weight:750}.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.primary{width:100%;border:0;background:var(--green);color:white;border-radius:13px;padding:14px;font-weight:700;margin-top:8px}.secondary{border:1px solid var(--line);background:white;border-radius:12px;padding:11px 13px;color:var(--ink)}.danger{color:var(--red)}
@@ -51,20 +50,20 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
 <body>
 <div class="login-screen" id="loginScreen">
  <div class="login-card">
-  <div class="brand">煦禾<small>PERSONAL FINANCE · CLOUD SYNC</small></div>
+  <div class="brand">簡記<small>PERSONAL FINANCE · CLOUD SYNC</small></div>
   <h1 style="margin-top:28px">歡迎回來</h1>
   <p>輸入你的共用密碼，即可在手機與電腦同步記帳資料。</p>
   <form id="loginForm">
    <label class="sub" for="loginPassword">共用密碼</label>
    <input id="loginPassword" type="password" autocomplete="current-password" placeholder="請輸入密碼" required>
-   <button class="primary" id="loginButton" type="submit">登入煦禾</button>
+   <button class="primary" id="loginButton" type="submit">登入簡記</button>
   </form>
   <div class="login-error" id="loginError"></div>
  </div>
 </div>
 <div id="appShell">
 <div class="app">
-<header><div class="brand">煦禾<small>PERSONAL FINANCE · v3.6</small></div><div class="header-actions"><button class="icon-btn" id="backupTop" aria-label="備份">↥</button><button class="icon-btn" id="settingsTop" aria-label="設定">⚙</button></div></header>
+<header><div class="brand">簡記<small>PERSONAL FINANCE · v3.6</small></div><div class="header-actions"><button class="icon-btn" id="backupTop" aria-label="備份">↥</button><button class="icon-btn" id="settingsTop" aria-label="設定">⚙</button></div></header>
 
 <section id="homePage" class="page active">
  <div class="topline"><div><h1>收支總覽</h1><div class="sub" id="todayLabel"></div></div><div class="period"><select id="yearSelect"></select><span class="sub">年度</span></div></div>
@@ -107,14 +106,14 @@ h1{font-size:25px;letter-spacing:-.04em;margin:0 0 5px}h2{font-size:17px;margin:
   <div class="settings-row"><div><b>變更共用密碼</b><div class="sub">修改手機與電腦共用的登入密碼</div></div><button class="secondary" id="changePasswordBtn">變更</button></div>
   <div class="settings-row"><div><b>資料備份</b><div class="sub">下載 JSON 檔保存資料</div></div><button class="secondary" id="exportBtn">備份</button></div>
   <div class="settings-row"><div><b>匯入備份</b><div class="sub">從 JSON 檔還原</div></div><button class="secondary" id="importBtn">匯入</button><input type="file" id="importFile" accept=".json,application/json" hidden></div>
-  <div class="settings-row"><div><b>登出煦禾</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
+  <div class="settings-row"><div><b>登出簡記</b><div class="sub">登出此裝置，不會刪除雲端資料</div></div><button class="secondary" id="logoutBtn">登出</button></div>
   <div class="settings-row"><div><b>清除所有資料</b><div class="sub">此操作無法復原，請先備份</div></div><button class="secondary danger" id="clearBtn">清除</button></div>
  </div>
  <p class="sub" style="line-height:1.7;margin:16px 4px">版本 3.0 · Supabase 雲端同步。建議定期匯出備份。</p>
 </section>
 </div>
 
-<button class="fab" id="addExpense" type="button" aria-label="新增一筆支出" title="新增支出">＋</button>
+<button class="fab" id="addExpense">＋ 記一筆</button>
 <nav class="nav"><div class="nav-inner">
 <button class="active" data-page="homePage"><b>⌂</b>總覽</button><button data-page="recordsPage"><b>≡</b>紀錄</button><button data-page="statsPage"><b>▥</b>統計</button><button data-page="settingsPage"><b>⚙</b>設定</button>
 </div></nav>
@@ -172,7 +171,7 @@ async function boot(){
   e.preventDefault();const btn=document.getElementById('loginButton'),err=document.getElementById('loginError');
   btn.disabled=true;btn.textContent='登入中…';err.textContent='';
   try{await signIn(document.getElementById('loginPassword').value);}catch(ex){console.error(ex);err.textContent='登入失敗：請確認密碼，或檢查 Supabase 使用者是否已確認 Email。';}
-  finally{btn.disabled=false;btn.textContent='登入煦禾';}
+  finally{btn.disabled=false;btn.textContent='登入簡記';}
  });
 }
 
@@ -254,7 +253,7 @@ function budgetModal(){
 function categoriesModal(){openModal('分類管理',`<div class="sub" style="margin-bottom:10px">使用上、下按鈕調整分類顯示順序。</div><div id="catRows">${data.categories.map((c,i)=>`<div class="settings-row"><div><b>${esc(c.name)}</b></div><div style="display:flex;gap:6px;align-items:center"><button class="secondary" onclick="moveCat('${c.id}',-1)" ${i===0?'disabled':''}>↑</button><button class="secondary" onclick="moveCat('${c.id}',1)" ${i===data.categories.length-1?'disabled':''}>↓</button><button class="secondary" onclick="renameCat('${c.id}')">改名</button></div></div>`).join('')}</div><div class="field"><label>新增分類名稱</label><input id="newCatName" maxlength="16" placeholder="例如：保險"></div><button class="primary" id="addCatBtn">新增分類</button>`);document.getElementById('addCatBtn').onclick=()=>{let n=document.getElementById('newCatName').value.trim();if(!n)return toast('請輸入分類名稱');if(data.categories.some(c=>c.name===n))return toast('分類已存在');data.categories.push({id:crypto.randomUUID(),name:n,color:colors[data.categories.length%colors.length],icon:'',annual:0,monthly:0});closeModal();save();toast('分類已新增')}}
 window.moveCat=(id,dir)=>{let i=data.categories.findIndex(c=>c.id===id),j=i+dir;if(i<0||j<0||j>=data.categories.length)return;[data.categories[i],data.categories[j]]=[data.categories[j],data.categories[i]];save();categoriesModal()};
 window.renameCat=id=>{let c=cat(id),n=prompt('請輸入新的分類名稱',c.name);if(n&&n.trim()){c.name=n.trim().slice(0,16);save();categoriesModal()}};
-function exportData(){let blob=new Blob([JSON.stringify({...data,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`煦禾備份_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);toast('備份檔已匯出')}
+function exportData(){let blob=new Blob([JSON.stringify({...data,exportedAt:new Date().toISOString()},null,2)],{type:'application/json'});let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`簡記備份_${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);toast('備份檔已匯出')}
 
 function exportExcel(){
  if(!window.XLSX){toast('Excel 元件載入中，請稍後再試');return}
@@ -268,7 +267,7 @@ function exportExcel(){
  const ws2=XLSX.utils.json_to_sheet(budgets.length?budgets:[{年度:y,分類:'尚無分類'}]);
  ws2['!cols']=[{wch:10},{wch:16},{wch:16},{wch:16},{wch:18},{wch:16}];
  XLSX.utils.book_append_sheet(wb,ws2,'分類預算');
- XLSX.writeFile(wb,`煦禾_${y}年支出報表.xlsx`);toast('Excel 檔已匯出');
+ XLSX.writeFile(wb,`簡記_${y}年支出報表.xlsx`);toast('Excel 檔已匯出');
 }
 function importData(file){let reader=new FileReader();reader.onload=()=>{try{let x=JSON.parse(reader.result);if(!Array.isArray(x.categories)||!Array.isArray(x.records))throw Error();if(!confirm('匯入會取代目前裝置上的資料，確定繼續？'))return;data={...x,version:3,categories:x.categories,records:x.records,budgetsByYear:x.budgetsByYear||{},carryovers:x.carryovers||{}};ensureBudgetData();save();toast('資料已還原')}catch(e){alert('檔案格式不正確，無法匯入')}};reader.readAsText(file)}
 function init(){
@@ -304,7 +303,32 @@ function init(){
  render();
 }
 boot().catch(e=>{console.error(e);document.getElementById('loginError').textContent='無法連接雲端服務，請稍後重試。'});
-if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+// PWA 自動更新：每次開啟時主動檢查 GitHub Pages 上的新版；更新完成後只重新載入一次。
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  const hadController = !!navigator.serviceWorker.controller;
+  let reloadingForUpdate = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (hadController && !reloadingForUpdate) {
+      reloadingForUpdate = true;
+      window.location.reload();
+    }
+  });
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' });
+      await registration.update();
+      if (registration.waiting) registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+      registration.addEventListener('updatefound', () => {
+        const worker = registration.installing;
+        if (worker) worker.addEventListener('statechange', () => {
+          if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+            worker.postMessage({ type: 'SKIP_WAITING' });
+          }
+        });
+      });
+    } catch (error) { console.warn('簡記自動更新檢查失敗，將於下次開啟時重試。', error); }
+  });
+}
 </script>
 </body>
 </html>
