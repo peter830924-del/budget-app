@@ -1,5 +1,5 @@
 /* 簡記 PWA Service Worker — network-first shell + safe cache cleanup */
-const CACHE_NAME = 'jianji-budget-v3-7-1-plus-button';
+const CACHE_NAME = 'jianji-budget-v3-7-2-plus-button-up';
 const APP_CACHE_PREFIX = 'jianji-budget-';
 const APP_SHELL = ['./', './index.html', './manifest.json', './icon.svg'];
 
