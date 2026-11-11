@@ -1,7 +1,13 @@
-簡記 v3.7｜PWA 自動更新版
+簡記 v3.7.1｜加號按鈕微調版
 
-請將 ZIP 內全部檔案（index.html、manifest.json、icon.svg、sw.js）覆蓋 GitHub Pages 專案根目錄同名檔案並 Commit。
+本版以 v3.7 PWA 自動更新版為基礎，保留原有年度預算、Supabase 雲端同步、登入及資料功能。
 
-本版加入 Service Worker 主動更新檢查。GitHub Pages 發布新檔後，已安裝的 PWA 在下次連線開啟時會檢查新版，安裝完成後自動重新載入。離線時會使用快取版本。
+本次調整：
+- 「＋ 記一筆」改為只有「＋」。
+- 手機版按鈕調整為 46×46 px 圓形，加號縮小。
+- 手機版按鈕上移 15 px，避免貼近畫面底部。
+- 電腦版維持原本按鈕位置與尺寸。
+- 更新 Service Worker 快取名稱，協助手機端偵測新版。
 
-不會清除 localStorage、IndexedDB 或 Supabase 雲端資料。第三方 CDN（Supabase JS、SheetJS）維持由網路載入，不會快取第三方 API 回應。
+更新方式：將 ZIP 內全部檔案覆蓋 GitHub Pages 專案根目錄同名檔案並 Commit。
+不會清除瀏覽器本機資料或 Supabase 雲端資料。
